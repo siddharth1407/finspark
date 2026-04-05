@@ -151,9 +151,9 @@ export function AIThinking({ isProcessing, stage, entities = [], confidenceScore
                   className="bg-white/10 backdrop-blur rounded-lg p-3 flex items-center gap-2"
                 >
                   <div className={`w-3 h-3 rounded-full ${entity.type === 'kyc' ? 'bg-green-400' :
-                      entity.type === 'payment' ? 'bg-blue-400' :
-                        entity.type === 'gst' ? 'bg-yellow-400' :
-                          'bg-purple-400'
+                    entity.type === 'payment' ? 'bg-blue-400' :
+                      entity.type === 'gst' ? 'bg-yellow-400' :
+                        'bg-purple-400'
                     }`} />
                   <div className="flex-1">
                     <p className="font-medium text-sm">{entity.name}</p>

@@ -157,7 +157,7 @@ export default function Requirements() {
                 const requiredFields = service.required_fields || [];
                 const optionalFields = service.optional_fields || [];
                 const constraints = service.constraints || [];
-                
+
                 return (
                   <div
                     key={index}

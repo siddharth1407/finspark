@@ -96,7 +96,7 @@ export default function Configurations() {
             <div className="flex items-center gap-3 mt-2">
               <span className="status-badge status-info">v{selectedConfig.version}</span>
               <span className={`status-badge ${selectedConfig.status === 'validated' ? 'status-success' :
-                  selectedConfig.status === 'draft' ? 'status-warning' : 'status-info'
+                selectedConfig.status === 'draft' ? 'status-warning' : 'status-info'
                 }`}>
                 {selectedConfig.status}
               </span>
@@ -140,8 +140,8 @@ export default function Configurations() {
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`px-4 py-2 font-medium transition-colors ${activeTab === tab
-                  ? 'text-blue-400 border-b-2 border-blue-400'
-                  : 'text-slate-400 hover:text-white'
+                ? 'text-blue-400 border-b-2 border-blue-400'
+                : 'text-slate-400 hover:text-white'
                 }`}
             >
               {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -237,12 +237,12 @@ export default function Configurations() {
                     <div
                       key={i}
                       className={`p-3 rounded-lg ${issue.severity === 'error' ? 'bg-red-500/10 border border-red-500/30' :
-                          issue.severity === 'warning' ? 'bg-yellow-500/10 border border-yellow-500/30' :
-                            'bg-blue-500/10 border border-blue-500/30'
+                        issue.severity === 'warning' ? 'bg-yellow-500/10 border border-yellow-500/30' :
+                          'bg-blue-500/10 border border-blue-500/30'
                         }`}
                     >
                       <span className={`text-sm ${issue.severity === 'error' ? 'text-red-400' :
-                          issue.severity === 'warning' ? 'text-yellow-400' : 'text-blue-400'
+                        issue.severity === 'warning' ? 'text-yellow-400' : 'text-blue-400'
                         }`}>
                         [{issue.severity.toUpperCase()}] {issue.message}
                       </span>
@@ -304,7 +304,7 @@ export default function Configurations() {
                 </div>
                 <div className="flex items-center gap-3">
                   <span className={`status-badge ${config.status === 'validated' ? 'status-success' :
-                      config.status === 'draft' ? 'status-warning' : 'status-info'
+                    config.status === 'draft' ? 'status-warning' : 'status-info'
                     }`}>
                     {config.status}
                   </span>

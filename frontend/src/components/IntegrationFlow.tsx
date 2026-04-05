@@ -13,7 +13,6 @@ import ReactFlow, {
   useEdgesState,
   MarkerType,
 } from 'reactflow';
-import 'reactflow/dist/style.css';
 import { motion } from 'framer-motion';
 
 interface Service {
@@ -62,7 +61,7 @@ function ServiceNode({ data }: { data: any }) {
           {data.endpoints.slice(0, 2).map((ep: any, i: number) => (
             <div key={i} className="flex items-center gap-1">
               <span className={`px-1 rounded text-[10px] font-bold ${ep.method === 'POST' ? 'bg-green-600' :
-                  ep.method === 'GET' ? 'bg-blue-600' : 'bg-yellow-600'
+                ep.method === 'GET' ? 'bg-blue-600' : 'bg-yellow-600'
                 }`}>
                 {ep.method}
               </span>

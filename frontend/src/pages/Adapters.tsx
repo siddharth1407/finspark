@@ -86,8 +86,8 @@ export default function Adapters() {
             key={type}
             onClick={() => setFilterType(type)}
             className={`px-4 py-2 rounded-lg font-medium transition-all ${filterType === type
-                ? 'bg-blue-600 text-white'
-                : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
+              ? 'bg-blue-600 text-white'
+              : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
               }`}
           >
             {type === 'all' ? 'All' : type.toUpperCase()}
@@ -110,9 +110,9 @@ export default function Adapters() {
               >
                 <div className="flex items-center gap-4">
                   <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${adapter.service_type === 'kyc' ? 'bg-purple-500/20 text-purple-400' :
-                      adapter.service_type === 'payment' ? 'bg-green-500/20 text-green-400' :
-                        adapter.service_type === 'gst' ? 'bg-orange-500/20 text-orange-400' :
-                          'bg-blue-500/20 text-blue-400'
+                    adapter.service_type === 'payment' ? 'bg-green-500/20 text-green-400' :
+                      adapter.service_type === 'gst' ? 'bg-orange-500/20 text-orange-400' :
+                        'bg-blue-500/20 text-blue-400'
                     }`}>
                     <Puzzle className="w-5 h-5" />
                   </div>
@@ -143,8 +143,8 @@ export default function Adapters() {
                         {details.endpoints?.map((endpoint, i) => (
                           <div key={i} className="flex items-center gap-3">
                             <span className={`px-2 py-0.5 rounded text-xs font-mono ${endpoint.method === 'GET' ? 'bg-green-500/20 text-green-400' :
-                                endpoint.method === 'POST' ? 'bg-blue-500/20 text-blue-400' :
-                                  'bg-yellow-500/20 text-yellow-400'
+                              endpoint.method === 'POST' ? 'bg-blue-500/20 text-blue-400' :
+                                'bg-yellow-500/20 text-yellow-400'
                               }`}>
                               {endpoint.method}
                             </span>

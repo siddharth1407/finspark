@@ -113,8 +113,8 @@ export function VoiceInput({ onTranscript, onComplete, placeholder = "Click mic 
           whileTap={{ scale: 0.95 }}
           onClick={isListening ? stopListening : startListening}
           className={`relative p-6 rounded-full shadow-lg transition-all ${isListening
-              ? 'bg-red-500 hover:bg-red-600'
-              : 'bg-gradient-to-br from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700'
+            ? 'bg-red-500 hover:bg-red-600'
+            : 'bg-gradient-to-br from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700'
             }`}
         >
           {isListening ? (

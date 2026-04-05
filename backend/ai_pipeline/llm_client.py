@@ -52,7 +52,7 @@ class HuggingFaceClient(LLMClient):
                     temperature=0.1
                 )
             )
-            
+
             # Extract content from response
             content = response.choices[0].message.content
             return self._extract_json(content)
@@ -65,7 +65,7 @@ class HuggingFaceClient(LLMClient):
         """Extract JSON from model response"""
         # Try to find JSON in the response
         text = text.strip()
-        
+
         # Remove markdown code blocks if present
         if "```json" in text:
             match = re.search(r'```json\s*(.*?)\s*```', text, re.DOTALL)
@@ -75,7 +75,7 @@ class HuggingFaceClient(LLMClient):
             match = re.search(r'```\s*(.*?)\s*```', text, re.DOTALL)
             if match:
                 text = match.group(1)
-        
+
         # Find JSON object or array
         json_match = re.search(r'(\{.*\}|\[.*\])', text, re.DOTALL)
         if json_match:
@@ -85,7 +85,7 @@ class HuggingFaceClient(LLMClient):
                 return json_match.group(1)
             except:
                 pass
-        
+
         return text
 
     def count_tokens(self, text: str) -> int:
@@ -224,11 +224,11 @@ def get_llm_client(
     model: str = None
 ) -> LLMClient:
     """Factory function to get appropriate LLM client
-    
+
     Providers:
         - huggingface: Hugging Face Inference API (requires HUGGINGFACE_API_KEY)
         - mock: Mock client for testing (no API key needed)
-    
+
     Recommended free models:
         - Qwen/Qwen2.5-72B-Instruct (best quality, slower)
         - mistralai/Mistral-7B-Instruct-v0.2 (good balance)
@@ -241,7 +241,8 @@ def get_llm_client(
         api_key = api_key or os.getenv("HUGGINGFACE_API_KEY")
         model = model or os.getenv("AI_MODEL", "Qwen/Qwen2.5-72B-Instruct")
         if not api_key:
-            logger.warning("No HuggingFace API key, falling back to mock client")
+            logger.warning(
+                "No HuggingFace API key, falling back to mock client")
             return MockLLMClient()
         return HuggingFaceClient(api_key, model)
     else:

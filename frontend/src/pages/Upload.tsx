@@ -163,8 +163,8 @@ export default function Upload() {
           whileTap={{ scale: 0.98 }}
           onClick={() => setShowVoiceInput(false)}
           className={`flex-1 p-4 rounded-xl flex items-center justify-center gap-3 transition-all ${!showVoiceInput
-              ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white'
-              : 'glass-card text-slate-400 hover:text-white'
+            ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white'
+            : 'glass-card text-slate-400 hover:text-white'
             }`}
         >
           <UploadIcon className="w-5 h-5" />
@@ -175,8 +175,8 @@ export default function Upload() {
           whileTap={{ scale: 0.98 }}
           onClick={() => setShowVoiceInput(true)}
           className={`flex-1 p-4 rounded-xl flex items-center justify-center gap-3 transition-all ${showVoiceInput
-              ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white'
-              : 'glass-card text-slate-400 hover:text-white'
+            ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white'
+            : 'glass-card text-slate-400 hover:text-white'
             }`}
         >
           <Mic className="w-5 h-5" />
@@ -270,16 +270,16 @@ export default function Upload() {
                     transition={{ duration: 2, repeat: Infinity }}
                   >
                     <UploadIcon className="w-12 h-12 text-slate-400 mb-4" />
-                </motion.div>
-                <p className="text-white font-medium mb-2">
-                  {isDragActive ? 'Drop the file here' : 'Drag & drop your document'}
-                </p>
-                <p className="text-slate-400 text-sm">
-                  or click to browse (PDF, TXT, DOCX)
-                </p>
-              </>
-            )}
-          </div>
+                  </motion.div>
+                  <p className="text-white font-medium mb-2">
+                    {isDragActive ? 'Drop the file here' : 'Drag & drop your document'}
+                  </p>
+                  <p className="text-slate-400 text-sm">
+                    or click to browse (PDF, TXT, DOCX)
+                  </p>
+                </>
+              )}
+            </div>
           </div>
         </motion.div>
       )}
