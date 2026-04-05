@@ -1,0 +1,138 @@
+BUSINESS REQUIREMENTS DOCUMENT (BRD)
+Project: Customer Digital Onboarding Platform
+Version: 1.0
+Date: 2024-02-15
+
+1. EXECUTIVE SUMMARY
+This document outlines the requirements for implementing a comprehensive digital customer onboarding platform that integrates with multiple service providers for identity verification, payment processing, and regulatory compliance.
+
+2. BUSINESS OBJECTIVES
+- Enable 100% digital customer onboarding without physical document submission
+- Reduce onboarding time from 5 days to under 10 minutes
+- Ensure compliance with RBI KYC guidelines and PMLA regulations
+- Support multiple payment methods including UPI, cards, and net banking
+
+3. INTEGRATION REQUIREMENTS
+
+3.1 AADHAAR KYC VERIFICATION (MANDATORY)
+The system MUST integrate with UIDAI's Aadhaar eKYC service for identity verification.
+
+Required Fields:
+- Aadhaar Number (12-digit UID)
+- Full Name (as per Aadhaar)
+- Date of Birth
+- Mobile Number (for OTP verification)
+
+Optional Fields:
+- Email Address
+- Address for cross-verification
+
+API Endpoints:
+- POST /v2/kyc/verify/otp - OTP-based verification
+- POST /v2/otp/generate - Generate OTP for Aadhaar
+
+Constraints:
+- Verification must complete within 30 seconds
+- OTP expires in 10 minutes
+- Maximum 3 OTP attempts per session
+- Must capture timestamp of user consent
+
+3.2 PAN VERIFICATION (MANDATORY)
+Integration with NSDL/ITD for PAN card validation.
+
+Required Fields:
+- PAN Number (10-character alphanumeric)
+- Name on PAN
+- Date of Birth
+
+The system must verify:
+- PAN card is active and not blacklisted
+- Name matches with provided details (fuzzy matching acceptable)
+- DOB matches exactly
+
+3.3 PAYMENT GATEWAY INTEGRATION (MANDATORY)
+Multi-channel payment support is essential for the platform.
+
+3.3.1 Razorpay Integration
+- Support order creation, payment capture, and refunds
+- Amount in smallest currency unit (paise for INR)
+- Receipt ID must be unique per transaction
+
+3.3.2 UPI Integration (OPTIONAL but preferred)
+- Support for UPI collect requests
+- VPA (Virtual Payment Address) validation
+- Transaction timeout: 5 minutes
+
+Required Payment Fields:
+- Amount
+- Currency (INR default)
+- Customer Email
+- Customer Phone
+
+3.4 GST VERIFICATION (OPTIONAL)
+For business customers, GST verification may be required.
+
+Required Fields:
+- GSTIN (15-character)
+- Financial Year
+
+Validation:
+- GSTIN format validation
+- Active registration status check
+- Trade name and legal name retrieval
+
+3.5 BANK ACCOUNT VERIFICATION (CONDITIONAL)
+Required when customer opts for direct bank integration.
+
+Required Fields:
+- Account Number
+- IFSC Code
+- Account Holder Name
+
+Verification Method:
+- Penny drop verification
+- Name matching with fuzzy logic
+
+4. DATA FLOW
+
+4.1 Customer Onboarding Flow
+Step 1: Customer submits basic details (name, email, phone)
+Step 2: Aadhaar eKYC verification with OTP
+Step 3: PAN verification and linking
+Step 4: Payment method setup
+Step 5: Account activation
+
+4.2 Integration Points
+- CRM System → KYC Provider: Customer details for verification
+- KYC Provider → Core Banking: Verified customer profile
+- Payment Gateway → Core Banking: Transaction updates
+- Core Banking → Notification Service: Status updates
+
+5. SECURITY REQUIREMENTS
+- All PII data must be encrypted at rest using AES-256
+- API communication must use TLS 1.3 or higher
+- OAuth 2.0 for API authentication
+- All KYC documents must be stored with encryption
+- Audit trail for all data access
+- PAN and Aadhaar numbers must be masked in logs (show last 4 digits only)
+
+6. COMPLIANCE REQUIREMENTS
+- RBI Master Direction on KYC
+- PMLA (Prevention of Money Laundering Act) guidelines
+- PCI DSS compliance for payment data handling
+- UIDAI guidelines for Aadhaar data handling
+- GDPR principles for data minimization
+
+7. NON-FUNCTIONAL REQUIREMENTS
+- System availability: 99.9% uptime
+- API response time: < 3 seconds for 95th percentile
+- Concurrent users: Support 10,000 simultaneous onboardings
+- Data retention: 10 years for KYC records
+
+8. ACCEPTANCE CRITERIA
+- All mandatory integrations operational
+- End-to-end onboarding in < 10 minutes
+- Zero data breach incidents
+- 100% compliance with regulatory requirements
+
+END OF DOCUMENT

@@ -1,0 +1,337 @@
+{
+  "project_name": "Customer Digital Onboarding Platform",
+  "services": [
+    {
+      "service_type": "kyc",
+      "service_name": "Aadhaar eKYC Verification",
+      "priority": "mandatory",
+      "description": "UIDAI Aadhaar-based eKYC for identity verification with OTP",
+      "api_endpoints": [
+        {
+          "method": "POST",
+          "path": "/v2/kyc/verify/otp",
+          "description": "OTP-based Aadhaar verification"
+        },
+        {
+          "method": "POST",
+          "path": "/v2/otp/generate",
+          "description": "Generate OTP for Aadhaar"
+        }
+      ],
+      "required_fields": [
+        {
+          "field_name": "aadhaar_number",
+          "data_type": "string",
+          "description": "12-digit Aadhaar UID"
+        },
+        {
+          "field_name": "full_name",
+          "data_type": "string",
+          "description": "Full name as per Aadhaar"
+        },
+        {
+          "field_name": "date_of_birth",
+          "data_type": "date",
+          "description": "Date of birth"
+        },
+        {
+          "field_name": "mobile_number",
+          "data_type": "string",
+          "description": "Mobile for OTP verification"
+        }
+      ],
+      "optional_fields": [
+        {
+          "field_name": "email_address",
+          "data_type": "string",
+          "description": "Email for notifications"
+        },
+        {
+          "field_name": "address",
+          "data_type": "object",
+          "description": "Address for cross-verification"
+        }
+      ],
+      "constraints": [
+        "Verification must complete within 30 seconds",
+        "OTP expires in 10 minutes",
+        "Maximum 3 OTP attempts per session",
+        "Must capture timestamp of user consent"
+      ]
+    },
+    {
+      "service_type": "kyc",
+      "service_name": "PAN Verification",
+      "priority": "mandatory",
+      "description": "NSDL/ITD PAN card validation and verification",
+      "api_endpoints": [
+        {
+          "method": "POST",
+          "path": "/v1/pan/verify",
+          "description": "Verify PAN details"
+        }
+      ],
+      "required_fields": [
+        {
+          "field_name": "pan_number",
+          "data_type": "string",
+          "description": "10-character PAN"
+        },
+        {
+          "field_name": "name_on_pan",
+          "data_type": "string",
+          "description": "Name as on PAN card"
+        },
+        {
+          "field_name": "date_of_birth",
+          "data_type": "date",
+          "description": "DOB for validation"
+        }
+      ],
+      "optional_fields": [],
+      "constraints": [
+        "PAN must be active and not blacklisted",
+        "Name matching with fuzzy logic acceptable",
+        "DOB must match exactly"
+      ]
+    },
+    {
+      "service_type": "payment",
+      "service_name": "Razorpay Payment Gateway",
+      "priority": "mandatory",
+      "description": "Multi-channel payment processing via Razorpay",
+      "api_endpoints": [
+        {
+          "method": "POST",
+          "path": "/v1/orders",
+          "description": "Create payment order"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/payments/{id}/capture",
+          "description": "Capture authorized payment"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/payments/{id}/refund",
+          "description": "Initiate refund"
+        }
+      ],
+      "required_fields": [
+        {
+          "field_name": "amount",
+          "data_type": "integer",
+          "description": "Amount in paise"
+        },
+        {
+          "field_name": "currency",
+          "data_type": "string",
+          "description": "Currency code (INR)"
+        },
+        {
+          "field_name": "customer_email",
+          "data_type": "string",
+          "description": "Customer email"
+        },
+        {
+          "field_name": "customer_phone",
+          "data_type": "string",
+          "description": "Customer phone"
+        }
+      ],
+      "optional_fields": [
+        {
+          "field_name": "receipt_id",
+          "data_type": "string",
+          "description": "Unique receipt ID"
+        },
+        {
+          "field_name": "notes",
+          "data_type": "object",
+          "description": "Custom key-value pairs"
+        }
+      ],
+      "constraints": [
+        "Receipt ID must be unique per transaction",
+        "PCI DSS compliance required"
+      ]
+    },
+    {
+      "service_type": "payment",
+      "service_name": "UPI Payment Integration",
+      "priority": "optional",
+      "description": "UPI collect and pay functionality",
+      "api_endpoints": [
+        {
+          "method": "POST",
+          "path": "/v1/upi/collect",
+          "description": "Initiate UPI collect request"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/upi/status/{txn_id}",
+          "description": "Check transaction status"
+        }
+      ],
+      "required_fields": [
+        {
+          "field_name": "vpa",
+          "data_type": "string",
+          "description": "UPI Virtual Payment Address"
+        },
+        {
+          "field_name": "amount",
+          "data_type": "number",
+          "description": "Payment amount"
+        },
+        {
+          "field_name": "txn_note",
+          "data_type": "string",
+          "description": "Transaction note"
+        }
+      ],
+      "optional_fields": [
+        {
+          "field_name": "expiry_minutes",
+          "data_type": "integer",
+          "description": "Request validity"
+        }
+      ],
+      "constraints": [
+        "VPA validation required",
+        "Transaction timeout: 5 minutes"
+      ]
+    },
+    {
+      "service_type": "gst",
+      "service_name": "GST Verification",
+      "priority": "optional",
+      "description": "GSTN verification for business customers",
+      "api_endpoints": [
+        {
+          "method": "GET",
+          "path": "/v1/gstin/{gstin}",
+          "description": "Verify GSTIN details"
+        }
+      ],
+      "required_fields": [
+        {
+          "field_name": "gstin",
+          "data_type": "string",
+          "description": "15-character GSTIN"
+        },
+        {
+          "field_name": "financial_year",
+          "data_type": "string",
+          "description": "Financial year"
+        }
+      ],
+      "optional_fields": [],
+      "constraints": [
+        "GSTIN format validation required",
+        "Check active registration status"
+      ]
+    },
+    {
+      "service_type": "banking",
+      "service_name": "Bank Account Verification",
+      "priority": "conditional",
+      "description": "Penny drop bank account verification",
+      "api_endpoints": [
+        {
+          "method": "POST",
+          "path": "/v1/account/verify",
+          "description": "Verify bank account via penny drop"
+        }
+      ],
+      "required_fields": [
+        {
+          "field_name": "account_number",
+          "data_type": "string",
+          "description": "Bank account number"
+        },
+        {
+          "field_name": "ifsc_code",
+          "data_type": "string",
+          "description": "IFSC code"
+        },
+        {
+          "field_name": "account_holder_name",
+          "data_type": "string",
+          "description": "Name on account"
+        }
+      ],
+      "optional_fields": [
+        {
+          "field_name": "account_type",
+          "data_type": "string",
+          "description": "Savings/Current"
+        }
+      ],
+      "constraints": [
+        "Penny drop verification method",
+        "Name matching with fuzzy logic"
+      ]
+    }
+  ],
+  "integration_points": [
+    {
+      "source_system": "CRM System",
+      "target_system": "KYC Provider",
+      "data_exchanged": "Customer details for verification",
+      "frequency": "real-time"
+    },
+    {
+      "source_system": "KYC Provider",
+      "target_system": "Core Banking",
+      "data_exchanged": "Verified customer profile",
+      "frequency": "real-time"
+    },
+    {
+      "source_system": "Payment Gateway",
+      "target_system": "Core Banking",
+      "data_exchanged": "Transaction updates",
+      "frequency": "real-time"
+    },
+    {
+      "source_system": "Core Banking",
+      "target_system": "Notification Service",
+      "data_exchanged": "Status updates",
+      "frequency": "event-driven"
+    }
+  ],
+  "data_flows": [
+    {
+      "flow_name": "Customer Onboarding",
+      "steps": [
+        "Customer submits basic details",
+        "Aadhaar eKYC verification with OTP",
+        "PAN verification and linking",
+        "Payment method setup",
+        "Account activation"
+      ],
+      "systems_involved": [
+        "Web App",
+        "KYC Service",
+        "Payment Gateway",
+        "Core Banking"
+      ]
+    }
+  ],
+  "security_requirements": [
+    "All PII data must be encrypted at rest using AES-256",
+    "API communication must use TLS 1.3 or higher",
+    "OAuth 2.0 for API authentication",
+    "All KYC documents must be stored with encryption",
+    "Audit trail for all data access",
+    "PAN and Aadhaar numbers must be masked in logs"
+  ],
+  "compliance_requirements": [
+    "RBI Master Direction on KYC",
+    "PMLA guidelines",
+    "PCI DSS compliance for payment data",
+    "UIDAI guidelines for Aadhaar handling",
+    "GDPR principles for data minimization"
+  ],
+  "confidence_score": 0.92
+}

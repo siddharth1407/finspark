@@ -1,0 +1,319 @@
+{
+  "config_id": "cfg-demo-001",
+  "requirement_id": "req-demo-001",
+  "tenant_id": "tenant_demo",
+  "config_name": "Integration Config - Customer Digital Onboarding Platform",
+  "version": "1.0.0",
+  "status": "validated",
+  "adapters": [
+    {
+      "adapter_id": "kyc_aadhaar_v2",
+      "adapter_name": "Aadhaar eKYC Adapter v2",
+      "version": "2.0",
+      "service_type": "kyc",
+      "base_url": "https://api.uidai.gov.in/v2",
+      "auth_type": "oauth2",
+      "field_mappings": [
+        {
+          "source_field": "aadhaar_number",
+          "target_field": "aadhaarId",
+          "transformation": "trim() | validate_aadhaar()",
+          "is_required": true,
+          "validation_rules": [
+            "length:12",
+            "numeric_only"
+          ]
+        },
+        {
+          "source_field": "full_name",
+          "target_field": "name",
+          "transformation": "uppercase() | trim() | truncate(100)",
+          "is_required": true,
+          "validation_rules": [
+            "min_length:1",
+            "max_length:100"
+          ]
+        },
+        {
+          "source_field": "date_of_birth",
+          "target_field": "dob",
+          "transformation": "format_date('YYYY-MM-DD', 'DD/MM/YYYY')",
+          "is_required": true,
+          "validation_rules": [
+            "valid_date",
+            "not_future"
+          ]
+        },
+        {
+          "source_field": "mobile_number",
+          "target_field": "mobile",
+          "transformation": "trim() | remove_country_code('+91')",
+          "is_required": true,
+          "validation_rules": [
+            "length:10",
+            "starts_with:6,7,8,9"
+          ]
+        },
+        {
+          "source_field": "consent_given",
+          "target_field": "consent",
+          "transformation": "to_boolean()",
+          "is_required": true,
+          "validation_rules": [
+            "must_be_true"
+          ]
+        },
+        {
+          "source_field": "consent_timestamp",
+          "target_field": "consent_timestamp",
+          "transformation": "to_iso_datetime()",
+          "is_required": true,
+          "validation_rules": [
+            "valid_datetime"
+          ]
+        }
+      ],
+      "endpoints": [
+        {
+          "name": "verify_otp",
+          "method": "POST",
+          "path": "/kyc/verify/otp"
+        },
+        {
+          "name": "generate_otp",
+          "method": "POST",
+          "path": "/otp/generate"
+        }
+      ],
+      "headers": {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "X-Api-Version": "2.0"
+      },
+      "timeout_seconds": 30,
+      "retry_config": {
+        "max_retries": 3,
+        "backoff_factor": 2,
+        "retry_on": [
+          500,
+          502,
+          503
+        ]
+      },
+      "mapping_confidence": 0.94
+    },
+    {
+      "adapter_id": "kyc_pan_v1",
+      "adapter_name": "PAN Verification Adapter",
+      "version": "1.0",
+      "service_type": "kyc",
+      "base_url": "https://api.nsdl.co.in/pan/v1",
+      "auth_type": "api_key",
+      "field_mappings": [
+        {
+          "source_field": "pan_number",
+          "target_field": "panNumber",
+          "transformation": "uppercase() | trim()",
+          "is_required": true,
+          "validation_rules": [
+            "pattern:^[A-Z]{5}[0-9]{4}[A-Z]$"
+          ]
+        },
+        {
+          "source_field": "name_on_pan",
+          "target_field": "name",
+          "transformation": "uppercase() | trim()",
+          "is_required": true,
+          "validation_rules": [
+            "min_length:1"
+          ]
+        },
+        {
+          "source_field": "date_of_birth",
+          "target_field": "dob",
+          "transformation": "format_date('YYYY-MM-DD', 'DD-MM-YYYY')",
+          "is_required": true,
+          "validation_rules": [
+            "valid_date"
+          ]
+        }
+      ],
+      "endpoints": [
+        {
+          "name": "verify",
+          "method": "POST",
+          "path": "/verify"
+        }
+      ],
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "timeout_seconds": 30,
+      "retry_config": {
+        "max_retries": 2,
+        "backoff_factor": 2
+      },
+      "mapping_confidence": 0.91
+    },
+    {
+      "adapter_id": "payment_razorpay_v1",
+      "adapter_name": "Razorpay Payment Gateway",
+      "version": "1.0",
+      "service_type": "payment",
+      "base_url": "https://api.razorpay.com/v1",
+      "auth_type": "basic_auth",
+      "field_mappings": [
+        {
+          "source_field": "amount",
+          "target_field": "amount",
+          "transformation": "to_integer() | multiply(100)",
+          "is_required": true,
+          "validation_rules": [
+            "positive_integer"
+          ]
+        },
+        {
+          "source_field": "currency",
+          "target_field": "currency",
+          "transformation": "uppercase()",
+          "is_required": true,
+          "default_value": "INR",
+          "validation_rules": [
+            "enum:INR,USD"
+          ]
+        },
+        {
+          "source_field": "customer_email",
+          "target_field": "notes.email",
+          "transformation": "lowercase() | trim()",
+          "is_required": true,
+          "validation_rules": [
+            "valid_email"
+          ]
+        },
+        {
+          "source_field": "customer_phone",
+          "target_field": "notes.contact",
+          "transformation": "trim()",
+          "is_required": true,
+          "validation_rules": [
+            "length:10"
+          ]
+        },
+        {
+          "source_field": "receipt_id",
+          "target_field": "receipt",
+          "transformation": "trim()",
+          "is_required": false,
+          "validation_rules": [
+            "max_length:40"
+          ]
+        }
+      ],
+      "endpoints": [
+        {
+          "name": "create_order",
+          "method": "POST",
+          "path": "/orders"
+        },
+        {
+          "name": "capture_payment",
+          "method": "POST",
+          "path": "/payments/{id}/capture"
+        },
+        {
+          "name": "refund",
+          "method": "POST",
+          "path": "/payments/{id}/refund"
+        }
+      ],
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "timeout_seconds": 60,
+      "retry_config": {
+        "max_retries": 3,
+        "backoff_factor": 2
+      },
+      "mapping_confidence": 0.96
+    }
+  ],
+  "global_transforms": [
+    {
+      "name": "trim_strings",
+      "type": "string",
+      "apply_to": "all",
+      "operation": "trim"
+    },
+    {
+      "name": "mask_pii_in_logs",
+      "type": "logging",
+      "apply_to": [
+        "aadhaar_number",
+        "pan_number",
+        "account_number"
+      ],
+      "operation": "mask_except_last_4"
+    }
+  ],
+  "error_handling": {
+    "on_error": "retry_then_fail",
+    "max_retries": 3,
+    "retry_delay_ms": 1000,
+    "circuit_breaker": {
+      "enabled": true,
+      "failure_threshold": 5,
+      "reset_timeout_ms": 30000
+    },
+    "fallback": {
+      "kyc": "manual_verification_queue",
+      "payment": "notify_admin"
+    }
+  },
+  "security": {
+    "encryption": "AES-256",
+    "pii_fields": [
+      "aadhaar_number",
+      "pan_number",
+      "mobile_number",
+      "date_of_birth"
+    ],
+    "mask_in_logs": true,
+    "audit_all_access": true
+  },
+  "validation": {
+    "is_valid": true,
+    "validation_score": 0.92,
+    "issues": [
+      {
+        "severity": "warning",
+        "field": "adapters[0].timeout_seconds",
+        "message": "Consider reducing timeout for better UX",
+        "suggestion": "Set timeout to 20 seconds for KYC endpoints"
+      }
+    ],
+    "coverage": {
+      "required_fields_mapped": 12,
+      "required_fields_total": 12,
+      "optional_fields_mapped": 3,
+      "optional_fields_total": 5
+    },
+    "recommendations": [
+      "Add retry logic for transient failures",
+      "Consider implementing circuit breaker pattern",
+      "Add request idempotency for payment operations"
+    ],
+    "security_check": {
+      "pii_fields_identified": [
+        "aadhaar_number",
+        "pan_number",
+        "mobile_number"
+      ],
+      "encryption_configured": true,
+      "auth_configured": true
+    }
+  },
+  "created_at": "2024-02-15T10:30:00Z",
+  "updated_at": "2024-02-15T10:35:00Z",
+  "created_by": "ai_pipeline"
+}

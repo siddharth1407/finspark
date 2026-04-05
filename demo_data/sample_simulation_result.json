@@ -1,0 +1,181 @@
+{
+  "simulation_id": "sim-demo-001",
+  "config_id": "cfg-demo-001",
+  "status": "completed",
+  "summary": {
+    "scenarios_run": 8,
+    "passed": 7,
+    "failed": 1,
+    "pass_rate": 87.5
+  },
+  "execution_time_ms": 1245,
+  "results": [
+    {
+      "scenario_id": "TC001",
+      "scenario_name": "Happy Path - Valid Aadhaar Verification",
+      "adapter": "kyc_aadhaar_v2",
+      "input": {
+        "aadhaar_number": "123456789012",
+        "name": "JOHN DOE",
+        "mobile": "9876543210"
+      },
+      "expected_status": 200,
+      "actual_status": 200,
+      "passed": true,
+      "execution_time_ms": 156,
+      "actual_response": {
+        "status": "verified",
+        "verification_id": "ver_abc123xyz",
+        "match_score": 0.95,
+        "verified_at": "2024-02-15T10:40:00Z",
+        "masked_aadhaar": "XXXX-XXXX-9012"
+      }
+    },
+    {
+      "scenario_id": "TC002",
+      "scenario_name": "Error - Invalid Aadhaar Format",
+      "adapter": "kyc_aadhaar_v2",
+      "input": {
+        "aadhaar_number": "12345",
+        "name": "JOHN DOE"
+      },
+      "expected_status": 400,
+      "actual_status": 400,
+      "passed": true,
+      "execution_time_ms": 45,
+      "actual_response": {
+        "status": "error",
+        "error_code": "INVALID_AADHAAR",
+        "message": "Aadhaar must be 12 digits"
+      }
+    },
+    {
+      "scenario_id": "TC003",
+      "scenario_name": "Happy Path - Valid PAN Verification",
+      "adapter": "kyc_pan_v1",
+      "input": {
+        "pan_number": "ABCDE1234F",
+        "name": "JOHN DOE",
+        "dob": "1990-01-15"
+      },
+      "expected_status": 200,
+      "actual_status": 200,
+      "passed": true,
+      "execution_time_ms": 134,
+      "actual_response": {
+        "status": "verified",
+        "pan_status": "active",
+        "name_match": true,
+        "dob_match": true
+      }
+    },
+    {
+      "scenario_id": "TC004",
+      "scenario_name": "Error - Invalid PAN Format",
+      "adapter": "kyc_pan_v1",
+      "input": {
+        "pan_number": "INVALID",
+        "name": "JOHN DOE"
+      },
+      "expected_status": 400,
+      "actual_status": 400,
+      "passed": true,
+      "execution_time_ms": 38,
+      "actual_response": {
+        "status": "error",
+        "error_code": "INVALID_PAN",
+        "message": "Invalid PAN format"
+      }
+    },
+    {
+      "scenario_id": "TC005",
+      "scenario_name": "Happy Path - Payment Order Creation",
+      "adapter": "payment_razorpay_v1",
+      "input": {
+        "amount": 10000,
+        "currency": "INR"
+      },
+      "expected_status": 200,
+      "actual_status": 200,
+      "passed": true,
+      "execution_time_ms": 189,
+      "actual_response": {
+        "id": "order_abc123xyz",
+        "status": "created",
+        "amount": 10000,
+        "currency": "INR",
+        "created_at": "2024-02-15T10:41:00Z"
+      }
+    },
+    {
+      "scenario_id": "TC006",
+      "scenario_name": "Error - Invalid Payment Amount",
+      "adapter": "payment_razorpay_v1",
+      "input": {
+        "amount": 0,
+        "currency": "INR"
+      },
+      "expected_status": 400,
+      "actual_status": 400,
+      "passed": true,
+      "execution_time_ms": 42,
+      "actual_response": {
+        "status": "error",
+        "error_code": "INVALID_AMOUNT",
+        "message": "Amount must be positive"
+      }
+    },
+    {
+      "scenario_id": "TC007",
+      "scenario_name": "Happy Path - GST Verification",
+      "adapter": "gst_verification_v1",
+      "input": {
+        "gstin": "29ABCDE1234F1Z5"
+      },
+      "expected_status": 200,
+      "actual_status": 200,
+      "passed": true,
+      "execution_time_ms": 167,
+      "actual_response": {
+        "gstin": "29ABCDE1234F1Z5",
+        "legal_name": "ACME CORP PRIVATE LIMITED",
+        "trade_name": "ACME CORP",
+        "status": "Active",
+        "registration_date": "2018-07-01"
+      }
+    },
+    {
+      "scenario_id": "TC008",
+      "scenario_name": "Edge Case - Network Timeout",
+      "adapter": "kyc_aadhaar_v2",
+      "input": {
+        "aadhaar_number": "999999999999",
+        "name": "TIMEOUT TEST"
+      },
+      "expected_status": 200,
+      "actual_status": 503,
+      "passed": false,
+      "execution_time_ms": 30045,
+      "actual_response": {
+        "status": "error",
+        "error_code": "GATEWAY_TIMEOUT",
+        "message": "Service temporarily unavailable"
+      }
+    }
+  ],
+  "errors": [
+    {
+      "scenario": "TC008",
+      "expected": 200,
+      "actual": 503,
+      "message": "Service temporarily unavailable"
+    }
+  ],
+  "recommendations": [
+    "Add retry logic for transient failures (503 errors)",
+    "Consider implementing circuit breaker pattern",
+    "Add fallback mechanism for KYC verification timeouts",
+    "All core scenarios passed - configuration is production-ready"
+  ],
+  "executed_at": "2024-02-15T10:42:00Z"
+}
