@@ -76,10 +76,9 @@ syncbridge-ai/
 │   ├── sample_extracted_requirements.json
 │   ├── sample_generated_config.json
 │   └── sample_simulation_result.json
-├── docs/
-│   ├── ARCHITECTURE.md       # System design deep-dive
-│   └── DEMO_SCRIPT.md        # Hackathon presentation guide
-└── README.md                 # This file
+├── README.md                  # Main documentation
+├── SETUP.md                   # Quick setup guide
+└── ARCHITECTURE.md            # System design
 ```
 
 ## ⚡ Quick Start (5 Minutes)
@@ -369,6 +368,7 @@ AI_PROVIDER=mock
 ## 📚 Documentation
 
 - **ARCHITECTURE.md**: System design, data flow, component deep-dive
+- **SETUP.md**: Quick 5-minute setup guide
 - **API Docs**: http://localhost:8000/docs (Swagger UI)
 
 

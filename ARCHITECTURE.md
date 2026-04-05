@@ -114,25 +114,29 @@
 ## File Structure (Key Files)
 
 ```
-backend/
-├── ai_pipeline/
-│   ├── pipeline.py      ← AI orchestration + fallback
-│   ├── llm_client.py    ← HuggingFace client
-│   └── prompts.py       ← Prompt templates
-├── adapters/
-│   ├── registry.py      ← 7 prebuilt adapters
-│   └── mock_apis.py     ← Realistic mock responses
-├── services/
-│   ├── document_parser.py
-│   ├── config_generator.py
-│   └── simulation_engine.py
-└── main.py              ← FastAPI entry point
-
-frontend/
-├── src/
-│   ├── pages/           ← Dashboard, Upload, Requirements...
-│   └── components/      ← DemoMode, VoiceInput, IntegrationFlow
-└── package.json
+syncbridge-ai/
+├── backend/
+│   ├── ai_pipeline/
+│   │   ├── pipeline.py      ← AI orchestration + fallback
+│   │   ├── llm_client.py    ← HuggingFace client
+│   │   └── prompts.py       ← Prompt templates
+│   ├── adapters/
+│   │   ├── registry.py      ← 7 prebuilt adapters
+│   │   └── mock_apis.py     ← Realistic mock responses
+│   ├── services/
+│   │   ├── document_parser.py
+│   │   ├── config_generator.py
+│   │   └── simulation_engine.py
+│   └── main.py              ← FastAPI entry point
+├── frontend/
+│   ├── src/
+│   │   ├── pages/           ← Dashboard, Upload, Requirements...
+│   │   └── components/      ← DemoMode, VoiceInput, IntegrationFlow
+│   └── package.json
+├── demo_data/               ← Sample BRDs for testing
+├── README.md                ← Main documentation
+├── SETUP.md                 ← Quick setup guide
+└── ARCHITECTURE.md          ← This file
 ```
 
 ---
